@@ -3,6 +3,7 @@
 # See the file LICENSE included in this distribution
 
 import openpyxl
+import collections
 
 
 def find_difference(primary_wb_obj, secondary_wb_name):
@@ -33,7 +34,27 @@ def find_difference(primary_wb_obj, secondary_wb_name):
     print('Done')
 
 
+def count_unique(wb_obj, sheet_name):
+    print('\nCounting unique operations... ', end='')
+    data = wb_obj[sheet_name]
+    counter = collections.Counter()
+    for row in data.iter_rows(values_only=True):
+        counter.update([row[3]])
+    print('Done')
+    print(f'Writing results to {sheet_name}.xlsx... ', end='')
+    sheet = wb_obj.create_sheet(title='Операции')
+    row = 1
+    for k, v in counter.items():
+        sheet.cell(column=1, row=row, value=k)
+        sheet.cell(column=2, row=row, value=v)
+        row += 1
+    wb_obj.save(f'{sheet_name}.xlsx')
+    print('Done')
+
+
 if __name__ == '__main__':
-    mis_wb = openpyxl.load_workbook('МИС.xlsx')
+    MIS_FILENAME = 'МИС'
+    mis_wb = openpyxl.load_workbook(f'{MIS_FILENAME}.xlsx')
     find_difference(mis_wb, 'ВМП ФЕД')
     find_difference(mis_wb, 'ВМП ОМС')
+    count_unique(mis_wb, MIS_FILENAME)
