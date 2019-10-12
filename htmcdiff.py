@@ -6,11 +6,13 @@ import openpyxl
 
 
 def find_difference(primary_wb_obj, secondary_wb_name):
-    # Prepare data
+    print(f'\n{secondary_wb_name}')
+    print('Preparing data... ', end='')
     primary_data = primary_wb_obj[secondary_wb_name]
     secondary_wb = openpyxl.load_workbook(f'{secondary_wb_name}.xlsx')
     secondary_data = secondary_wb['Лист2']
-    # Find difference
+    print('Done')
+    print('Looking for difference... ', end='')
     primary_set = set()
     for row in primary_data.iter_rows(values_only=True):
         primary_set.add(row[4])
@@ -19,7 +21,8 @@ def find_difference(primary_wb_obj, secondary_wb_name):
         secondary_set.add(row[1])
     set_diff = sorted(secondary_set - primary_set)
     total = len(set_diff)
-    # Output
+    print('Done')
+    print(f'Writing results to {secondary_wb_name}.xlsx... ', end='')
     # print(f'\n{secondary_wb_name} (всего: {total})')
     # print('===================')
     # print(*set_diff, sep='\n')
@@ -27,6 +30,7 @@ def find_difference(primary_wb_obj, secondary_wb_name):
     for i in range(total):
         sheet.cell(column=1, row=i+1, value=set_diff[i])
     secondary_wb.save(f'{secondary_wb_name}.xlsx')
+    print('Done')
 
 
 if __name__ == '__main__':
