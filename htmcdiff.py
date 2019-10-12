@@ -5,38 +5,26 @@
 import openpyxl
 
 
-def vmp_oms_difference():
+def find_difference(primary_wb_obj, secondary_wb_name):
     # Prepare data
-    _mis = openpyxl.load_workbook('МИС.xlsx')
-    _vmp_oms = openpyxl.load_workbook('ВМП-ОМС.xlsx')
-    vmp_oms = _vmp_oms['Лист2']
-    mis_vmp_oms = _mis['ВМП-ОМС']
+    primary_data = primary_wb_obj[secondary_wb_name]
+    secondary_wb = openpyxl.load_workbook(f'{secondary_wb_name}.xlsx')
+    secondary_data = secondary_wb['Лист2']
     # Find difference
-    vmp_oms_set = set([r[1] for r in vmp_oms.iter_rows(values_only=True)])
-    mis_vmp_oms_set = set([r[4] for r in mis_vmp_oms.iter_rows(values_only=True)])
-    vmp_oms_diff = sorted(vmp_oms_set - mis_vmp_oms_set)
-    print('\nВМП ОМС (всего: {})'.format(len(vmp_oms_diff)))
+    primary_set = set()
+    for row in primary_data.iter_rows(values_only=True):
+        primary_set.add(row[4])
+    secondary_set = set()
+    for row in secondary_data.iter_rows(values_only=True):
+        secondary_set.add(row[1])
+    set_diff = sorted(secondary_set - primary_set)
+    # Output
+    print(f'\n{secondary_wb_name} (всего: {len(set_diff)})')
     print('===================')
-    for e in vmp_oms_diff:
-        print(e)
-
-
-def vmp_fed_difference():
-    # Prepare data
-    _mis = openpyxl.load_workbook('МИС.xlsx')
-    _vmp_fed = openpyxl.load_workbook('ВМП-ФЕД.xlsx')
-    vmp_fed = _vmp_fed['Лист2']
-    mis_vmp_fed = _mis['ВМП-ФЕД']
-    # Find difference
-    vmp_fed_set = set([r[1] for r in vmp_fed.iter_rows(values_only=True)])
-    mis_vmp_fed_set = set([r[4] for r in mis_vmp_fed.iter_rows(values_only=True)])
-    vmp_fed_diff = sorted(vmp_fed_set - mis_vmp_fed_set)
-    print('\nВМП ФЕД (всего: {})'.format(len(vmp_fed_diff)))
-    print('===================')
-    for e in vmp_fed_diff:
-        print(e)
+    print(*set_diff, sep='\n')
 
 
 if __name__ == '__main__':
-    vmp_oms_difference()
-    vmp_fed_difference()
+    mis_wb = openpyxl.load_workbook('МИС.xlsx')
+    find_difference(mis_wb, 'ВМП ФЕД')
+    find_difference(mis_wb, 'ВМП ОМС')
