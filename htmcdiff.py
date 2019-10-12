@@ -18,10 +18,15 @@ def find_difference(primary_wb_obj, secondary_wb_name):
     for row in secondary_data.iter_rows(values_only=True):
         secondary_set.add(row[1])
     set_diff = sorted(secondary_set - primary_set)
+    total = len(set_diff)
     # Output
-    print(f'\n{secondary_wb_name} (всего: {len(set_diff)})')
-    print('===================')
-    print(*set_diff, sep='\n')
+    # print(f'\n{secondary_wb_name} (всего: {total})')
+    # print('===================')
+    # print(*set_diff, sep='\n')
+    sheet = secondary_wb.create_sheet(title=secondary_wb_name)
+    for i in range(total):
+        sheet.cell(column=1, row=i+1, value=set_diff[i])
+    secondary_wb.save(f'{secondary_wb_name}.xlsx')
 
 
 if __name__ == '__main__':
