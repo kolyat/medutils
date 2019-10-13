@@ -8,12 +8,13 @@ import collections
 
 def find_difference(primary_wb_obj, secondary_wb_name):
     print(f'\n{secondary_wb_name}')
-    print('Preparing data... ', end='')
+    print('Preparing data...', end=' ', flush=True)
     primary_data = primary_wb_obj[secondary_wb_name]
     secondary_wb = openpyxl.load_workbook(f'{secondary_wb_name}.xlsx')
     secondary_data = secondary_wb['Лист2']
     print('Done')
-    print('Looking for difference... ', end='')
+
+    print('Searching for difference...', end=' ', flush=True)
     primary_set = set()
     for row in primary_data.iter_rows(values_only=True):
         primary_set.add(row[4])
@@ -23,10 +24,9 @@ def find_difference(primary_wb_obj, secondary_wb_name):
     set_diff = sorted(secondary_set - primary_set)
     total = len(set_diff)
     print('Done')
-    print(f'Writing results to {secondary_wb_name}.xlsx... ', end='')
-    # print(f'\n{secondary_wb_name} (всего: {total})')
-    # print('===================')
-    # print(*set_diff, sep='\n')
+
+    print(f'Writing results to {secondary_wb_name}.xlsx...',
+          end=' ', flush=True)
     sheet = secondary_wb.create_sheet(title=secondary_wb_name)
     for i in range(total):
         sheet.cell(column=1, row=i+1, value=set_diff[i])
@@ -35,13 +35,14 @@ def find_difference(primary_wb_obj, secondary_wb_name):
 
 
 def count_unique(wb_obj, sheet_name):
-    print('\nCounting unique operations... ', end='')
+    print('\nCounting unique operations...', end=' ', flush=True)
     data = wb_obj[sheet_name]
     counter = collections.Counter()
     for row in data.iter_rows(values_only=True):
         counter.update([row[3]])
     print('Done')
-    print(f'Writing results to {sheet_name}.xlsx... ', end='')
+
+    print(f'Writing results to {sheet_name}.xlsx...', end=' ', flush=True)
     sheet = wb_obj.create_sheet(title='Операции')
     row = 1
     for k, v in counter.items():
