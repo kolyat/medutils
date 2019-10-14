@@ -34,28 +34,31 @@ def find_difference(primary_wb_obj, secondary_wb_name):
     print('Done')
 
 
-def count_unique(wb_obj, sheet_name):
-    print('\nCounting unique operations...', end=' ', flush=True)
+def count_unique(wb_obj, wb_filename, sheet_name):
+    print(f'\nCounting unique operations in {sheet_name}...',
+          end=' ', flush=True)
     data = wb_obj[sheet_name]
     counter = collections.Counter()
     for row in data.iter_rows(values_only=True):
         counter.update([row[3]])
     print('Done')
 
-    print(f'Writing results to {sheet_name}.xlsx...', end=' ', flush=True)
-    sheet = wb_obj.create_sheet(title='Операции')
+    print(f'Writing results to {wb_filename}...', end=' ', flush=True)
+    sheet = wb_obj.create_sheet(title=f'{sheet_name} операции')
     row = 1
     for k, v in counter.items():
         sheet.cell(column=1, row=row, value=k)
         sheet.cell(column=2, row=row, value=v)
         row += 1
-    wb_obj.save(f'{sheet_name}.xlsx')
+    wb_obj.save(wb_filename)
     print('Done')
 
 
 if __name__ == '__main__':
-    MIS_FILENAME = 'МИС'
-    mis_wb = openpyxl.load_workbook(f'{MIS_FILENAME}.xlsx')
+    MIS_FILENAME = 'МИС.xlsx'
+    mis_wb = openpyxl.load_workbook(MIS_FILENAME)
     find_difference(mis_wb, 'ВМП ФЕД')
     find_difference(mis_wb, 'ВМП ОМС')
-    count_unique(mis_wb, MIS_FILENAME)
+    count_unique(mis_wb, MIS_FILENAME, 'ВМП ФЕД')
+    count_unique(mis_wb, MIS_FILENAME, 'ВМП ОМС')
+    count_unique(mis_wb, MIS_FILENAME, 'СМП')
