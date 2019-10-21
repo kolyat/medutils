@@ -9,7 +9,7 @@ import collections
 def find_difference(primary_wb_obj, secondary_wb_name):
     print(f'\n{secondary_wb_name}')
     print('Preparing data...', end=' ', flush=True)
-    primary_data = primary_wb_obj[secondary_wb_name]
+    primary_data = primary_wb_obj['МИС']
     secondary_wb = openpyxl.load_workbook(f'{secondary_wb_name}.xlsx')
     secondary_data = secondary_wb['Лист2']
     print('Done')
@@ -59,6 +59,5 @@ if __name__ == '__main__':
     mis_wb = openpyxl.load_workbook(MIS_FILENAME)
     find_difference(mis_wb, 'ВМП ФЕД')
     find_difference(mis_wb, 'ВМП ОМС')
-    count_unique(mis_wb, MIS_FILENAME, 'ВМП ФЕД')
-    count_unique(mis_wb, MIS_FILENAME, 'ВМП ОМС')
-    count_unique(mis_wb, MIS_FILENAME, 'СМП')
+    count_unique(mis_wb, MIS_FILENAME, 'ВМП')
+    count_unique(mis_wb, MIS_FILENAME, 'неВМП')
