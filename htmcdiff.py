@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Kirill 'Kolyat' Kiselnikov
+# Copyright (c) 2019-2020 Kirill 'Kolyat' Kiselnikov
 # This file is the part of medutils, released under modified MIT license
 # See the file LICENSE included in this distribution
 
